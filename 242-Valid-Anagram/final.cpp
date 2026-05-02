@@ -21,9 +21,8 @@ public:
       if (p.second != t_seen[p.first]) return false;
       t_seen.erase(p.first);
     }
-    if (!t_seen.empty()) return false;
 
-    return true;
+    return t_seen.empty();
   }
 };
 
