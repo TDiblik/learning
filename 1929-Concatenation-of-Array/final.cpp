@@ -14,13 +14,13 @@ public:
     }
 };
 
-void runTest(std::vector<int> input, std::vector<int> expected, const std::string& testName) {
+void runTest(std::vector<int> input, std::vector<int> expected, const std::string& test_name) {
   std::vector<int> result = Solution::getConcatenation(input);
 
   if (result == expected) {
-    std::cout << testName << " Passed\n";
+    std::cout << test_name << " Passed\n";
   } else {
-    std::cout << testName << " Failed\n";
+    std::cout << test_name << " Failed\n";
     std::cout << "   Expected size: " << expected.size() << ", Got: " << result.size() << "\n";
   }
 }
@@ -33,9 +33,9 @@ int main() {
     runTest({7}, {7, 7}, "Test 3 (Single Element)");
     runTest({5, 5, 5}, {5, 5, 5, 5, 5, 5}, "Test 4 (Identical Elements)");
 
-    std::vector<int> largeInput(1000, 1);
-    std::vector<int> largeExpected(2000, 1);
-    runTest(largeInput, largeExpected, "Test 5 (Max Length Array)");
+    std::vector<int> large_input(1000, 1);
+    std::vector<int> large_exptected(2000, 1);
+    runTest(large_input, large_exptected, "Test 5 (Max Length Array)");
 
     std::cout << "\nFinished running tests.\n";
     return 0;
