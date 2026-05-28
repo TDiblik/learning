@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include <vector>
 
 class Solution {
@@ -17,37 +15,38 @@ public:
   }
 };
 
-void runTest(std::vector<int> nums, int expected, const std::string &test_name) {
-  std::vector<int> original_nums = nums;
-  int result = Solution::majorityElement(nums);
+#define CATCH_CONFIG_MAIN
+#include "../../vendor/catch2/catch.hpp"
 
-  if (result == expected) {
-    std::cout << "[PASS] " << test_name << "\n";
-  } else {
-    std::cout << "[FAIL] " << test_name << "\n";
-    std::cout << "       Input: nums=[";
-    for (size_t i = 0; i < original_nums.size(); ++i) {
-      std::cout << original_nums[i] << (i < original_nums.size() - 1 ? "," : "");
-    }
-    std::cout << "]\n";
-    std::cout << "       Expected: " << expected << ", Got: " << result << "\n\n";
+TEST_CASE("Majority Element") {
+  std::vector<int> nums;
+
+  SECTION("Test 1 (Example 1)") {
+    nums = {3, 2, 3};
+    CHECK(Solution::majorityElement(nums) == 3);
   }
-}
-
-int main() {
-  std::cout << "Running tests for Majority Element...\n\n";
-
-  // Problem Examples
-  runTest({3, 2, 3}, 3, "Test 1 (Example 1)");
-  runTest({2, 2, 1, 1, 1, 2, 2}, 2, "Test 2 (Example 2)");
-
-  // Additional Edge Cases
-  runTest({5}, 5, "Test 3 (Single element)");
-  runTest({1, 1, 1, 1}, 1, "Test 4 (All elements the same)");
-  runTest({1, 2, 2, 2, 2}, 2, "Test 5 (Majority clustered at the end)");
-  runTest({2, 2, 2, 2, 1}, 2, "Test 6 (Majority clustered at the beginning)");
-  runTest({6, 5, 5, 6, 5}, 5, "Test 7 (Alternating elements with majority)");
-
-  std::cout << "\nFinished running tests.\n";
-  return 0;
+  SECTION("Test 2 (Example 2)") {
+    nums = {2, 2, 1, 1, 1, 2, 2};
+    CHECK(Solution::majorityElement(nums) == 2);
+  }
+  SECTION("Test 3 (Single element)") {
+    nums = {5};
+    CHECK(Solution::majorityElement(nums) == 5);
+  }
+  SECTION("Test 4 (All elements the same)") {
+    nums = {1, 1, 1, 1};
+    CHECK(Solution::majorityElement(nums) == 1);
+  }
+  SECTION("Test 5 (Majority clustered at the end)") {
+    nums = {1, 2, 2, 2, 2};
+    CHECK(Solution::majorityElement(nums) == 2);
+  }
+  SECTION("Test 6 (Majority clustered at the beginning)") {
+    nums = {2, 2, 2, 2, 1};
+    CHECK(Solution::majorityElement(nums) == 2);
+  }
+  SECTION("Test 7 (Alternating elements with majority)") {
+    nums = {6, 5, 5, 6, 5};
+    CHECK(Solution::majorityElement(nums) == 5);
+  }
 }

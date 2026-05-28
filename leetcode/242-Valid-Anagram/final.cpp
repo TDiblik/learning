@@ -1,5 +1,5 @@
-#include <iostream>
 #include <string>
+#include <sys/types.h>
 #include <unordered_map>
 
 class Solution {
@@ -26,34 +26,24 @@ public:
   }
 };
 
-void runTest(const std::string& s, const std::string& t, bool expected, const std::string& test_name) {
-  bool result = Solution::isAnagram(s, t);
-  if (result == expected) {
-    std::cout << test_name << " Passed\n";
-  } else {
-    std::cout << test_name << " Failed\n";
-    std::cout << "   Expected: " << (expected ? "true" : "false") << ", Got: " << (result ? "true" : "false") << "\n";
+#define CATCH_CONFIG_MAIN
+#include "../../vendor/catch2/catch.hpp"
+
+TEST_CASE("Valid Anagram") {
+  SECTION("Test 1 (Example 1)") { CHECK(Solution::isAnagram("anagram", "nagaram") == true); }
+  SECTION("Test 2 (Example 2)") { CHECK(Solution::isAnagram("rat", "car") == false); }
+  SECTION("Test 3 (Single Character Match)") { CHECK(Solution::isAnagram("a", "a") == true); }
+  SECTION("Test 4 (Single Character Mismatch)") { CHECK(Solution::isAnagram("a", "b") == false); }
+  SECTION("Test 5 (Length Mismatch - s > t)") { CHECK(Solution::isAnagram("ab", "a") == false); }
+  SECTION("Test 6 (Length Mismatch - t > s)") { CHECK(Solution::isAnagram("a", "ab") == false); }
+  SECTION("Test 7 (Multiple Characters, Correct Frequencies)") { CHECK(Solution::isAnagram("aabbcc", "abcabc") == true); }
+  SECTION("Test 8 (Same Length, One Different Character)") { CHECK(Solution::isAnagram("aabbcc", "aabbcd") == false); }
+  SECTION("Test 9 (Same Characters, Different Frequencies)") { CHECK(Solution::isAnagram("aacc", "ccac") == false); }
+  SECTION("Test 10 (Max Length Strings 5 * 10^4)") {
+    std::string large_s(50000, 'a');
+    std::string large_t(50000, 'a');
+    large_s[25000] = 'z';
+    large_t[49999] = 'z';
+    CHECK(Solution::isAnagram(large_s, large_t) == true);
   }
-}
-
-int main() {
-  std::cout << "Running tests for Valid Anagram...\n\n";
-
-  runTest("anagram", "nagaram", true, "Test 1 (Example 1)");
-  runTest("rat", "car", false, "Test 2 (Example 2)");
-  runTest("a", "a", true, "Test 3 (Single Character Match)");
-  runTest("a", "b", false, "Test 4 (Single Character Mismatch)");
-  runTest("ab", "a", false, "Test 5 (Length Mismatch - s > t)");
-  runTest("a", "ab", false, "Test 6 (Length Mismatch - t > s)");
-  runTest("aabbcc", "abcabc", true, "Test 7 (Multiple Characters, Correct Frequencies)");
-  runTest("aabbcc", "aabbcd", false, "Test 8 (Same Length, One Different Character)");
-  runTest("aacc", "ccac", false, "Test 9 (Same Characters, Different Frequencies)");
-  std::string large_s(50000, 'a');
-  std::string large_t(50000, 'a');
-  large_s[25000] = 'z';
-  large_t[49999] = 'z';
-  runTest(large_s, large_t, true, "Test 10 (Max Length Strings 5 * 10^4)");
-
-  std::cout << "\nFinished running tests.\n";
-  return 0;
 }

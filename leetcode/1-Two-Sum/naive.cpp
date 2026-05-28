@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 
 class Solution {
@@ -14,12 +13,10 @@ public:
   }
 };
 
-int main() {
-  int target = 9;
-  std::vector<int> nums = {2,7,11,15};
+#define CATCH_CONFIG_MAIN
+#include "../../vendor/catch2/catch.hpp"
 
-  auto solution = Solution::twoSum(nums, target);
-  for (int c : solution) {
-    std::cout << c << "\n";
-  }
+TEST_CASE("Two Sum naive") {
+  std::vector<int> nums = {2, 7, 11, 15};
+  CHECK(Solution::twoSum(nums, 9) == std::vector<int>{0, 1});
 }

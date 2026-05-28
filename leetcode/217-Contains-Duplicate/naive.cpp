@@ -1,4 +1,3 @@
-#include <iostream>
 #include <unordered_set>
 #include <vector>
 
@@ -17,33 +16,35 @@ public:
   }
 };
 
-void runTest(std::vector<int> input, bool expected, const std::string& test_name) {
-  bool result = Solution::containsDuplicate(input);
-  if (result == expected) {
-    std::cout << test_name << " Passed\n";
-  } else {
-    std::cout << test_name << " Failed\n";
-    std::cout << "   Expected: " << (expected ? "true" : "false") << ", Got: " << (result ? "true" : "false") << "\n";
+#define CATCH_CONFIG_MAIN
+#include "../../vendor/catch2/catch.hpp"
+
+TEST_CASE("Contains Duplicate") {
+  SECTION("Test 1 (Example 1)") {
+    std::vector<int> nums = {1, 2, 3, 1};
+    CHECK(Solution::containsDuplicate(nums) == true);
   }
-}
-
-int main() {
-  std::cout << "Running tests for containsDuplicate...\n\n";
-
-  runTest({1, 2, 3, 1}, true, "Test 1 (Example 1)");
-  runTest({1, 2, 3, 4}, false, "Test 2 (Example 2)");
-  runTest({1, 1, 1, 3, 3, 4, 3, 2, 4, 2}, true, "Test 3 (Example 3)");
-  runTest({42}, false, "Test 4 (Single Element)");
-  runTest({-1000000000, 1000000000, -1000000000}, true, "Test 5 (Extreme Values)");
-
-  std::vector<int> large_input;
-  large_input.reserve(100000);
-  for (int i = 0; i < 99999; ++i) {
-    large_input.push_back(i);
+  SECTION("Test 2 (Example 2)") {
+    std::vector<int> nums = {1, 2, 3, 4};
+    CHECK(Solution::containsDuplicate(nums) == false);
   }
-  large_input.push_back(0);
-  runTest(large_input, true, "Test 6 (Max Length Array 10^5)");
-
-  std::cout << "\nFinished running tests.\n";
-  return 0;
+  SECTION("Test 3 (Example 3)") {
+    std::vector<int> nums = {1, 1, 1, 3, 3, 4, 3, 2, 4, 2};
+    CHECK(Solution::containsDuplicate(nums) == true);
+  }
+  SECTION("Test 4 (Single Element)") {
+    std::vector<int> nums = {42};
+    CHECK(Solution::containsDuplicate(nums) == false);
+  }
+  SECTION("Test 5 (Extreme Values)") {
+    std::vector<int> nums = {-1000000000, 1000000000, -1000000000};
+    CHECK(Solution::containsDuplicate(nums) == true);
+  }
+  SECTION("Test 6 (Max Length Array 10^5)") {
+    std::vector<int> large_input;
+    large_input.reserve(100000);
+    for (int i = 0; i < 99999; ++i) large_input.push_back(i);
+    large_input.push_back(0);
+    CHECK(Solution::containsDuplicate(large_input) == true);
+  }
 }

@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <iostream>
 #include <vector>
 
 class Solution {
@@ -12,29 +11,21 @@ public:
     }
 };
 
-void runTest(std::vector<int> input, std::vector<int> expected, const std::string& testName) {
-  std::vector<int> result = Solution::getConcatenation(input);
+#define CATCH_CONFIG_MAIN
+#include "../../vendor/catch2/catch.hpp"
 
-  if (result == expected) {
-    std::cout << testName << " Passed\n";
-  } else {
-    std::cout << testName << " Failed\n";
-    std::cout << "   Expected size: " << expected.size() << ", Got: " << result.size() << "\n";
-  }
-}
+TEST_CASE("Concatenation of Array") {
+  auto runTest = [](std::vector<int> input, std::vector<int> expected) {
+    CHECK(Solution::getConcatenation(input) == expected);
+  };
 
-int main() {
-    std::cout << "Running tests for getConcatenation...\n\n";
-
-    runTest({1, 4, 1, 2}, {1, 4, 1, 2, 1, 4, 1, 2}, "Test 1 (Example 1)");
-    runTest({22, 21, 20, 1}, {22, 21, 20, 1, 22, 21, 20, 1}, "Test 2 (Example 2)");
-    runTest({7}, {7, 7}, "Test 3 (Single Element)");
-    runTest({5, 5, 5}, {5, 5, 5, 5, 5, 5}, "Test 4 (Identical Elements)");
-
+  SECTION("Test 1 (Example 1)") { runTest({1, 4, 1, 2}, {1, 4, 1, 2, 1, 4, 1, 2}); }
+  SECTION("Test 2 (Example 2)") { runTest({22, 21, 20, 1}, {22, 21, 20, 1, 22, 21, 20, 1}); }
+  SECTION("Test 3 (Single Element)") { runTest({7}, {7, 7}); }
+  SECTION("Test 4 (Identical Elements)") { runTest({5, 5, 5}, {5, 5, 5, 5, 5, 5}); }
+  SECTION("Test 5 (Max Length Array)") {
     std::vector<int> largeInput(1000, 1);
     std::vector<int> largeExpected(2000, 1);
-    runTest(largeInput, largeExpected, "Test 5 (Max Length Array)");
-
-    std::cout << "\nFinished running tests.\n";
-    return 0;
+    runTest(largeInput, largeExpected);
+  }
 }

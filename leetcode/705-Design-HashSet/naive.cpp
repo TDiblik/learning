@@ -14,66 +14,54 @@ public:
     std::cout << "Hash: " << resp << "\n";
   }
 
-  void remove(int key) {}
+  void remove(int key) { (void)key; }
 
-  bool contains(int key) { }
+  bool contains(int key) {
+    (void)key;
+    return false;
+  }
 };
 
-void checkResult(bool expected, bool got, const std::string &test_name) {
-  if (expected == got) {
-    std::cout << "[PASS] " << test_name << "\n";
-  } else {
-    std::cout << "[FAIL] " << test_name << "\n";
-    std::cout << "       Expected: " << (expected ? "true" : "false") << ", Got: " << (got ? "true" : "false") << "\n\n";
-  }
-}
+#define CATCH_CONFIG_MAIN
+#include "../../vendor/catch2/catch.hpp"
 
-int main() {
-  std::cout << "Running tests for Design HashSet...\n\n";
-
-  // --- Test 1: LeetCode Example 1 ---
-  {
+TEST_CASE("Design HashSet") {
+  SECTION("Test 1 (Example)") {
     MyHashSet set;
     set.add(1);
     set.add(2);
-    checkResult(true, set.contains(1), "Test 1.1 (Example: contains 1)");
-    checkResult(false, set.contains(3), "Test 1.2 (Example: contains 3)");
+    CHECK(set.contains(1) == true);
+    CHECK(set.contains(3) == false);
 
     set.add(2);
-    checkResult(true, set.contains(2), "Test 1.3 (Example: contains 2 after duplicate add)");
+    CHECK(set.contains(2) == true);
 
     set.remove(2);
-    checkResult(false, set.contains(2), "Test 1.4 (Example: contains 2 after remove)");
+    CHECK(set.contains(2) == false);
   }
 
-  // --- Test 2: Removing a non-existent element ---
-  {
+  SECTION("Test 2 (Remove non-existent element)") {
     MyHashSet set;
-    set.remove(10); // Should do nothing and not crash
-    checkResult(false, set.contains(10), "Test 2 (Remove non-existent element)");
+    set.remove(10);
+    CHECK(set.contains(10) == false);
   }
 
-  // --- Test 3: Constraint Boundaries (Max value: 10^6) ---
-  {
+  SECTION("Test 3 (Constraint Boundaries - Max value)") {
     MyHashSet set;
     int max_val = 1000000;
     set.add(max_val);
-    checkResult(true, set.contains(max_val), "Test 3.1 (Max boundary element added)");
+    CHECK(set.contains(max_val) == true);
 
     set.remove(max_val);
-    checkResult(false, set.contains(max_val), "Test 3.2 (Max boundary element removed)");
+    CHECK(set.contains(max_val) == false);
   }
 
-  // --- Test 4: Constraint Boundaries (Min value: 0) ---
-  {
+  SECTION("Test 4 (Constraint Boundaries - Min value)") {
     MyHashSet set;
     set.add(0);
-    checkResult(true, set.contains(0), "Test 4.1 (Min boundary element 0 added)");
+    CHECK(set.contains(0) == true);
 
     set.remove(0);
-    checkResult(false, set.contains(0), "Test 4.2 (Min boundary element 0 removed)");
+    CHECK(set.contains(0) == false);
   }
-
-  std::cout << "\nFinished running tests.\n";
-  return 0;
 }

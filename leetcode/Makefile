@@ -6,7 +6,6 @@ CXXFLAGS = -std=c++23 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
            -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG
 
 IS_LLDB := $(filter lldb,$(firstword $(MAKECMDGOALS)))
-
 ifeq ($(filter clean,$(MAKECMDGOALS)),)
   ifneq ($(MAKECMDGOALS),)
     ifneq ($(IS_LLDB),)
@@ -30,13 +29,13 @@ OUT = $(P)/$(S).out
 
 all: check-args
 	@echo "Building $(SRC) ..."
-	@$(CXX) $(CXXFLAGS) -pthread $(SRC) -o $(OUT)
+	@$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT)
 	@echo "Running $(OUT) ...\n---"
 	@./$(OUT)
 
 run_lldb: check-args
 	@echo "Building $(SRC) for LLDB ..."
-	@$(CXX) $(CXXFLAGS) -pthread $(SRC) -o $(OUT)
+	@$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT)
 	@echo "Starting LLDB for $(OUT) ...\n---"
 	@lldb ./$(OUT)
 
