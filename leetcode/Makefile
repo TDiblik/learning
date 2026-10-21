@@ -1,54 +1,35 @@
-CXX = clang++
-CXXFLAGS = -std=c++23 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
-           -Wformat=2 -Werror -g3 -O0 -fsanitize=address,undefined \
-           -fno-omit-frame-pointer \
-           -D_GLIBCXX_DEBUG \
-           -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG
+UNAME := $(shell uname)
 
-IS_LLDB := $(filter lldb,$(firstword $(MAKECMDGOALS)))
-ifeq ($(filter clean,$(MAKECMDGOALS)),)
-  ifneq ($(MAKECMDGOALS),)
-    ifneq ($(IS_LLDB),)
-      P := $(word 2,$(MAKECMDGOALS))
-      S := $(word 3,$(MAKECMDGOALS))
-      $(eval $(MAKECMDGOALS):;@:)
-      $(eval lldb: run_lldb)
-    else
-      P := $(word 1,$(MAKECMDGOALS))
-      S := $(word 2,$(MAKECMDGOALS))
-      $(eval $(MAKECMDGOALS):;@:)
-      $(eval $(P): all)
-    endif
-  endif
+CXX = g++
+CXXFLAGS = -std=c++23 -g -O0 -Wall -Werror -Wpedantic -Wshadow -Wconversion -fsanitize=address,undefined
+OUT_DIR = ./build
+OUTPUT = $(OUT_DIR)/$(prob)/$(sol)
+
+ifeq ($(UNAME), Darwin)
+	CXX = clang++
 endif
 
-SRC = $(P)/$(S).cpp
-OUT = $(P)/$(S).out
+# Precompile catch2
+CATCH_OBJ = $(OUT_DIR)/catch2/catch_main.o
+CATCH_MAiN = ../vendor/catch2/catch_main.cpp
+$(CATCH_OBJ): $(CATCH_MAiN)
+	@mkdir -p $(OUT_DIR)/catch2
+	$(CXX) $(CXXFLAGS) -c $(CATCH_MAiN) -o $(CATCH_OBJ)
 
-.PHONY: all clean check-args run_lldb
+.PHONY: build run lldb clean
 
-all: check-args
-	@echo "Building $(SRC) ..."
-	@$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT)
-	@echo "Running $(OUT) ...\n---"
-	@./$(OUT)
+build: $(CATCH_OBJ)
+ifeq ($(and $(prob), $(sol)), )
+		$(error Example usage: make prob="proble-name" sol="solution-name" build/run/lldb)
+endif
+	@mkdir -p $(OUT_DIR)/$(prob)
+	$(CXX) $(CXXFLAGS) $(prob)/$(sol).cpp $(CATCH_OBJ) -o $(OUTPUT)
 
-run_lldb: check-args
-	@echo "Building $(SRC) for LLDB ..."
-	@$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT)
-	@echo "Starting LLDB for $(OUT) ...\n---"
-	@lldb ./$(OUT)
+run: build
+	$(OUTPUT)
 
-check-args:
-	@if [ -z "$(P)" ] || [ -z "$(S)" ]; then \
-		echo "Error: Missing arguments.\nUsage:\n  make <problem-name> <solution-name>\n  make lldb <problem-name> <solution-name>"; \
-		exit 1; \
-	fi
-	@if [ ! -f "$(SRC)" ]; then \
-		echo "Error: File '$(SRC)' does not exist."; \
-		exit 1; \
-	fi
+lldb: build
+	lldb $(OUTPUT)
 
 clean:
-	@echo "Cleaning up compiled files..."
-	@rm -rf */*.out*
+	@rm -rf $(OUT_DIR)

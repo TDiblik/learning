@@ -1,1 +1,0 @@
-[Problem description](https://leetcode.com/problems/remove-element/description/)
