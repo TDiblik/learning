@@ -16,7 +16,7 @@ $(CATCH_OBJ): $(CATCH_MAiN)
 	@mkdir -p $(OUT_DIR)/catch2
 	$(CXX) $(CXXFLAGS) -c $(CATCH_MAiN) -o $(CATCH_OBJ)
 
-.PHONY: build run lldb clean
+.PHONY: build run lldb clean all
 
 build: $(CATCH_OBJ)
 ifeq ($(and $(prob), $(sol)), )
@@ -30,6 +30,18 @@ run: build
 
 lldb: build
 	lldb $(OUTPUT)
+
+all:
+	@for problem_dir in ./*; do \
+		[ ! -d "$$problem_dir" ] && continue; \
+		[ "$$(basename "$$problem_dir")" = "build" ] && continue; \
+		for sol_file in "$$problem_dir"/*.cpp; do \
+			[ ! -f "$$sol_file" ] && continue; \
+			sol_name="$$(basename "$$sol_file" .cpp)"; \
+			prob_name="$$(basename "$$problem_dir")"; \
+			$(MAKE) prob="$$prob_name" sol="$$sol_name" run; \
+		done; \
+	done
 
 clean:
 	@rm -rf $(OUT_DIR)
