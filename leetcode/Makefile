@@ -1,7 +1,7 @@
 UNAME := $(shell uname)
 
 CXX = g++
-CXXFLAGS = -std=c++23 -g -O0 -Wall -Werror -Wpedantic -Wshadow -Wconversion -fsanitize=address,undefined
+CXXFLAGS = -std=c++23 -g -O0 -Wall -Werror -Wpedantic -Wshadow -Wconversion -fsanitize=address,undefined -fno-omit-frame-pointer
 OUT_DIR = ./build
 OUTPUT = $(OUT_DIR)/$(prob)/$(sol)
 
