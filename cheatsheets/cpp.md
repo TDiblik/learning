@@ -52,6 +52,7 @@ Do it in the following order:
 | `std::optional<T>` | Optional owned value | Stores `T` directly when present, no separate heap allocation |
 | `std::optional<T&>` (C++26) | Optional, mutable reference | Like `T*`, but expresses optional reference semantics. |
 | `std::optional<const T&>` (C++26) | Optional, read-only reference | Like `const T*`. |
+| `std::expected<T, E>` | Return a value or an error. Prefer `enum class CustomError` for `E` when possible. | Alternative to exceptions for expected failures |
 | `std::string` | `std::string_view` for reading, `std::string&` for modifying | Avoids copying string contents; view doesn't own the data |
 | `std::vector<T>` | `std::span<const T>` for reading, `std::span<T>` for modifying elements, `std::vector<T>&` for modifying the container | Zero-copy access to contiguous data |
 | `std::unique_ptr<T>` | Use for exclusive dynamic ownership | No reference counting. Use `std::move()` to transfer ownership, `*ptr` to access without transferring |
