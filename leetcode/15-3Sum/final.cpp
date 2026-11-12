@@ -14,15 +14,20 @@ public:
       if (i > 0 && nums[i] == nums[i - 1]) continue; // skip duplicates
 
       const int current = nums[i];
+      if (current > 0) break;
+
       size_t p_left = i + 1;
       size_t p_right = n - 1;
 
+
       while (p_left < p_right) {
-        if (current + nums[p_left] + nums[p_right] > 0) {
+        const int sum = current + nums[p_left] + nums[p_right];
+
+        if (sum > 0) {
           p_right--;
           continue;
         }
-        if (current + nums[p_left] + nums[p_right] < 0) {
+        if (sum < 0) {
           p_left++;
           continue;
         }
