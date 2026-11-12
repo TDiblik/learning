@@ -12,11 +12,9 @@ public:
     while (p_left < p_right) {
       if (numbers[p_left] + numbers[p_right] > target) {
         p_right--;
-        continue;
       }
       if (numbers[p_left] + numbers[p_right] < target) {
         p_left++;
-        continue;
       }
 
       if (numbers[p_left] + numbers[p_right] == target) {
