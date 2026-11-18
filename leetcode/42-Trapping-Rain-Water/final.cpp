@@ -17,16 +17,17 @@ public:
 
     int temp = 0;
     size_t right_p = left_p + 1;
+    int left_max = height[left_p];
     while (right_p < n) {
-      const int left = height[left_p];
       const int right = height[right_p];
 
-      if (left <= right) {
+      if (left_max <= right) {
+        left_max = right;
         left_p = right_p;
         answ += temp;
         temp = 0;
-      } else if (left > right) {
-        temp += left - right;
+      } else {
+        temp += left_max - right;
       }
       ++right_p;
     }
@@ -39,17 +40,14 @@ public:
 
     // go backwards and then every time i encountered bar bigger than the one at right_p,
     // i just counted the captured water and set right_p to the new bar and then repeated this untill left_p < right_p
-    temp = 0;
-    int right_largest_value = height[right_p]; // store the value so that we don't jump around in memory
+    int right_max = height[right_p]; // store the value so that we don't jump around in memory
     while (left_p <= right_p) {
       const int right = height[right_p];
 
-      if (right_largest_value <= right) {
-        right_largest_value = height[right_p];
-        answ += temp;
-        temp = 0;
-      } else if (right_largest_value > right) {
-        temp += right_largest_value - right;
+      if (right_max <= right) {
+        right_max = right;
+      } else {
+        answ += right_max - right;
       }
 
       if (right_p == left_p) break;
